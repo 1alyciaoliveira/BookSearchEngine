@@ -1,22 +1,9 @@
-const { User, Book } = reqyure('../models');
+const { User, Book } = require('../models');
 const { signToken } = require('../utils/auth');
 const { AuthenticationError } = require('apollo-server-express');
 
 const resolvers = {
     Query: {
-        users: async () => {
-            return User.find().populate('savedBooks');
-        },
-        user: async (parent, { username }) => {
-            return User.findOne({ username }).populate('savedBooks');
-        },
-        books: async (parent, { username }) => {
-            const params = username ? { username } : {};
-            return Book.find(params).sort({ createdAt: -1 });
-        },
-        book: async (parent, { bookId }) => {
-            return Book.findOne({ bookId });
-        },
         me: async (parent, args, context) => {
             if(context.user) {
                 const userData = await User.findOne({ _id: context.user._id })
