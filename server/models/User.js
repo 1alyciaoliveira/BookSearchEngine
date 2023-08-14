@@ -22,25 +22,7 @@ const userSchema = new Schema(
       required: true,
     },
     // set savedBooks to be an array of data that adheres to the bookSchema
-    savedBooks: [
-      {
-        bookId: {
-          type: String,
-          required: true,
-        },
-        authors: [String],
-        description: {
-          type: String,
-          required: true,
-        },
-          image: String,
-          link: String,
-        title: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
+    savedBooks: [bookSchema],
   },
   // set this to use virtual below
   {

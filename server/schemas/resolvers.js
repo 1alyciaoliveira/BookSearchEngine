@@ -40,21 +40,13 @@ const resolvers = {
         },
         saveBook: async (parent, { authors, description, bookId, image, link, title }, context) => {
             if (context.user) {
-                const book = await Book.create({
-                    authors,
-                    description,
-                    bookId,
-                    image,
-                    link,
-                    title,
-                });
-
-                await User.findByIdAndUpdate(
+               
+                const userData = await User.findByIdAndUpdate(
                     { _id: context.user._id },
-                    { $addToSet: { savedBooks: book._id } },
+                    { $addToSet: { savedBooks: { authors, description, bookId, image, link, title } } },
                 );
 
-                return book;
+                return userData;
             }
 
             throw new AuthenticationError('Sorry, you are not logged in');
@@ -62,16 +54,13 @@ const resolvers = {
 
         removeBook: async (parent, { bookId }, context) => {
             if (context.user) {
-                const book = await Book.findOneAndDelete({
-                    _id: bookId,
-                });
-
-                await User.findByIdAndUpdate(
+               
+               const updateUser = await User.findByIdAndUpdate(
                     { _id: context.user._id },
-                    { $pull: { savedBooks: book._id } },
+                    { $pull: { savedBooks: { bookId } } },
                 );
 
-                return book;
+                return updateUser;
             }
 
             throw new AuthenticationError('Sorry, you are not logged in');
